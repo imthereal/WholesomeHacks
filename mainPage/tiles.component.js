@@ -4,7 +4,7 @@ angular.
     module('tiles').
     component('tiles', {
         templateUrl: 'mainPage/tiles.template.html',
-        controller: function TilesCtrl($scope) {
+        controller: function TilesCtrl($scope, $http) {
 
             $scope.imagePath = 'img/water0.png';
             $scope.eatingTrackerPictures = 'img/eat/5day_0.png';
@@ -14,19 +14,24 @@ angular.
             $scope.standUpHandlerEnabled = true;
 	        $scope.fiveMeals = true;
             
-            var waterTimer = setInterval(drinkWaterHandler, 1000); //300000
-            var standUpTimer = setInterval(standUpHandler, 1000);   //600000
+            var waterTimer = setInterval(drinkWaterHandler, 60000); //300000
+            var standUpTimer = setInterval(standUpHandler, 130000);   //600000
             var waterPicCounter = 0;
             var eatPicCounter = 0;
 
 	        function drinkWaterHandler() {
 	           if ($scope.waterHandlerEnabled) {
-	               console.log("DRINK WATER"); //  replace with call to backend 
+	               $http.post('http://127.0.0.1:5000/pausespotify');
+				   $http.post('http://127.0.0.1:5000/playsong/water');
+	               console.log("DRINK WATER"); //  replace with call to backend
 	                }
 	            }
 	
 	            function standUpHandler() {
 	                if ($scope.standUpHandlerEnabled) {
+	                	$http.post('http://127.0.0.1:5000/pausespotify');
+	                	$http.post('http://127.0.0.1:5000/screensleep');
+				   		$http.post('http://127.0.0.1:5000/playsong/stand');
 	                    console.log("stand up"); //  replace with call to backend 
 	                }
 	            }
@@ -34,6 +39,8 @@ angular.
 	            $scope.addToEatingPicture= function (){
 	                eatPicCounter++;
 	                $scope.changeEatingPicture();
+	                $http.post('http://127.0.0.1:5000/pausespotify');
+	                $http.post('http://127.0.0.1:5000/playsong/eat');
 	                console.log("hey");
 	            }
 	            $scope.changeEatingPicture = function () {
